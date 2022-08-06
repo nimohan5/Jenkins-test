@@ -1,0 +1,13 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks: 
+    - name: "Check if listed package is installed or not on Red Hat Linux family"
+      command: rpm -q sos
+      register: package_check
+    - name: checking condition 
+      shell: uptime
+      when: package_check.stdout_lines == "sos-3.9-5.el7_9.7.noarch"
+
+

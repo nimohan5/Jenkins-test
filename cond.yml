@@ -1,0 +1,40 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks: 
+    - name: checking condition 
+      yum: 
+       name: sosreport
+       state: latest
+      when: ansible_facts['os_family'] == "RedHat" 
+
+
+
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+   - name: check ssh setting
+     shell: grep PermitRootLogin /etc/ssh/sshd_config
+     register: perm
+   - debug: var=perm.stdout_lines
+
+
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+   - name: disable Root Login
+     lineinfile:
+           dest: /etc/ssh/sshd_config
+           regexp: '^PermitRootLogin'
+           line: "PermitRootLogin no"
+           state: present
+           backup: yes
+   - name: restart ssh
+     ansible.builtin.service:
+      name: ssh
+      state: restarted

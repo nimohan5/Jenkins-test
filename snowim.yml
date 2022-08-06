@@ -1,0 +1,30 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: copy the rpm
+       ansible.builtin.copy:
+        src: /home/s-ansible-user/Altria_Linux_1-snowagent-6.4.0-x64.rpm
+        dest: /tmp/
+     - name: install the package
+       yum:
+        name: /tmp/Altria_Linux_1-snowagent-6.4.0-x64.rpm
+        state: present
+
+
+
+
+
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: testing var
+       shell: df -k | awk '$4+0 > 50000000' | awk {'print$6'}
+       register: output
+     - debug: 
+         var: output
+       
+       

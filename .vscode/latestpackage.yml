@@ -1,0 +1,9 @@
+--- 
+ -  hosts: all
+    become: true
+    gather_facts: yes
+    tasks:
+     - name: Install the latest version of Apache
+       ansible.builtin.yum:
+         name: python
+         state: latest
