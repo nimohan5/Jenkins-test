@@ -1,0 +1,14 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+    - name: congigure ntp
+      ansible.builtin.lineinfile:
+       path: /home/nmohan/testfile
+       insertbefore: 'server 0.rhel.pool.ntp.org iburst'
+       line: "{{ item.line }}"
+       with_item:
+        - 'server FTCPALVNTP01.avmed.com iburst'
+        - 'server PTCPALVNTP01.avmed.com iburst'
+
