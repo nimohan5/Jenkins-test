@@ -1,0 +1,75 @@
+--- 
+- 
+  become: true
+  gather_facts: false
+  hosts: all
+  tasks: 
+    - 
+      name: "Identifying the space available in RootVG"
+      register: rootvg_avail_space
+      shell: |
+        vgs --noheadings -o vg_free 'vg_root' | tr -d '</a-z,'
+    - 
+      set_fact: 
+        rootvg_free_space: "{{rootvg_avail_space.stdout}}"
+    - 
+      debug: 
+        var: rootvg_free_space
+    - 
+      lvol: 
+        lv: "{{lv_name}}"
+        size: "{{size_to_increase}}"
+        vg: vg_root
+      name: "Resizing the OS FS"
+      when: "rootvg_free_space >= 5"
+  vars: 
+    lv_name: "{{lv_name}}"
+    size_to_increase: "{{size_to_increase}}"
+
+
+
+---
+- name: user creation
+  hosts: all
+  gather_facts: yes
+  become: true
+  tasks:
+  -  name: starting usercreation
+     ansible.builtin.user:
+       name: asilam
+       shell: /bin/bash
+       group: unixadmin
+
+
+
+
+---
+ - hosts: all
+   become: true
+   vars_prompt:
+     - name: "username"
+       prompt: "enter the user name to be created"
+       private: no
+
+     - name: "password"
+       prompt: "enter the password to be set"
+       private: yes
+       confirm: yes
+
+     - name: "group"
+       prompt: "enter the group user to be part of"
+       private: yes
+       confirm: yes
+
+   tasks:
+     - name: "starting usercreation"
+       ansible.builtin.user:
+          name: "{{username}}"
+          shell: /bin/bash
+          group: "{{group}}"
+          password: "{{ password | password_hash('sha512') }}"
+
+     - name: display results
+       debug:
+         msg: "user created password changed"
+

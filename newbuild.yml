@@ -1,0 +1,29 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks: 
+    - name: configure repo
+      ansible.builtin.copy:
+      src: /home/nmohan/RHEL7_MGMT.repo
+      dest: /etc/yum.repos.d
+      shell: yum clean all
+    - name: congigure ntp
+      ansible.builtin.lineinfile:
+      path: /etc/chrony.conf
+      insertbefore: 'server 0.rhel.pool.ntp.org iburst'
+      line: 'server FTCPALVNTP01.avmed.com iburst'
+ 
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: copy the rpm
+       ansible.builtin.copy:
+       src: /home/s-ansibleuser/
+       dest: /tmp/
+     - name: install the package
+       yum:
+        name: /tmp/package
+        state: present
