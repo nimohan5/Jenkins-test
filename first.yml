@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+   - name: ntp configuration
+     ansible.builtin.lineinfile:
+       path: /etc/chrony.conf
+       insertbefore: 'server 0.rhel.pool.ntp.org iburst'
+       line: 'server FTCPALVNTP01.avmed.com iburst'
+   - name: copy repo file
+     ansible.builtin.copy:
+         src: /home/nmohan/RHEL7_MGMT.repo
+         dest: /etc/yum.repos.d
+
+   - name: fetch ip address
+     shell: 

@@ -1,0 +1,10 @@
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks: 
+    - name: applying all the patches 
+      yum: 
+      update_cache: yes
+    - name: '*'
+      state: latest

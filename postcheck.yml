@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  gather_facts: yes
+  ignore_errors: yes
+  tasks:
+  -  name: capture postcheck after patching
+     shell: uname -r;uptime;yum check-update
+     register: precheck
+  -  debug: var=precheck.stdout_lines
+   
