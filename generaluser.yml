@@ -73,3 +73,27 @@
        debug:
          msg: "user created password changed"
 
+
+
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: user creation
+       ansible.builtin.user:
+         name: "{{username}}"
+         
+         
+
+
+
+
+
+
+
+---
+
+  user_details:
+      - { name: testuser1 }
+      - { name: testuser2 }
