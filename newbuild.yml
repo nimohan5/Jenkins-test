@@ -25,3 +25,4 @@
       ansible.builtin.yum:
         name: /tmp/package
         state: present
+        test: nithin
