@@ -16,7 +16,7 @@
       ansible.builtin.lineinfile:
         path: /etc/chrony.conf
         insertbefore: 'server 0.rhel.pool.ntp.org iburst'
-        line: 'server FTCPALVNTP01.avmed.com iburst'
+        line: 'server 172.17.8.0 iburst'
     - name: copy the rpm
       ansible.builtin.copy:
         src: /home/s-ansibleuser/
