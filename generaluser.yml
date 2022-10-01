@@ -83,15 +83,11 @@
      - name: user creation
        ansible.builtin.user:
          name: "{{username}}"
+
+   
+
+    
          
-         
-
-
-
-
-
-
-
 ---
 
   user_details:

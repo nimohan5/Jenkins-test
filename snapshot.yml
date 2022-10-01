@@ -1,0 +1,15 @@
+- name: Create a snapshot
+  community.vmware.vmware_guest_snapshot:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    folder: "/{{ datacenter_name }}/vm/"
+    name: "{{ ahppmljump04}}"
+    state: present
+    snapshot_name: testsnapshot
+    description: testsnapshot
+  delegate_to: localhost
+
+
+
