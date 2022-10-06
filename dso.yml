@@ -1,0 +1,47 @@
+---
+ - hosts: all
+   become: true
+   vars_prompt:
+     - name: "password"
+       prompt: "enter the password to be set"
+       private: yes
+       confirm: yes
+   tasks:
+     - name: "starting usercreation"
+       ansible.builtin.user:
+          name: svc_DSO_Linux
+          comment: JDSO Automation user
+          shell: /bin/bash
+          password: "{{ password | password_hash('sha512') }}"
+
+     - name: display results
+       debug:
+         msg: "user created password changed"
+
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: Allow svc_DSO_Linux to run any commands without password
+       community.general.sudoers:
+          name: svc_DSO_Linux
+          state: present
+          commands: ALL
+          nopassword: false
+          backup: yes
+
+---
+ - hosts: all
+   become: true
+   gather_facts: yes
+   tasks:
+     - name: Validate the sudoers file before saving
+       ansible.builtin.blockinfile:
+          path: /etc/sudoers
+          validate: /usr/sbin/visudo -cf %s  
+          backup: yes        
+          block: |
+             ##Sudo Rule for DSO
+             Defaults:svc_DSO_Linux !requiretty
+             svc_DSO_Linux ALL=(ALL) NOPASSWD: ALL
